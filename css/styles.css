@@ -1,0 +1,15 @@
+body {
+  font-family: 'Roboto', 'Helvetica', sans-serif;
+}
+
+#app {
+  margin: 0 auto;
+}
+
+.app-container {
+  margin: 0 auto;
+}
+
+.app-card {
+  width: 100%;
+}
