@@ -1,5 +1,6 @@
 body {
   font-family: 'Roboto', 'Helvetica', sans-serif;
+  background-color: #E0E0E0;
 }
 
 #app {
@@ -12,4 +13,9 @@ body {
 
 .app-card {
   width: 100%;
+}
+
+.app-card-title {
+  background-color: #607D8B;
+  color: #FFFFFF;
 }
