@@ -19,3 +19,7 @@ body {
   background-color: #607D8B;
   color: #FFFFFF;
 }
+
+#vic-emergency-map {
+  height: 300px;
+}
