@@ -75,15 +75,23 @@ function getEmergencyFeature(emergency) {
   });
 }
 
-$.ajax({
-  url: 'https://data.emergency.vic.gov.au/Show?pageId=getIncidentJSON',
-  method: 'GET',
-  cache: false,
-  dataType: 'json'
-})
-.done(function(response) {
-  var features = response.results.map(function(item) {
+function onIncidentJSONLoaded(response) {
+  features = response.results.map(function(item) {
     return getEmergencyFeature(item);
   });
+  source.clear();
   source.addFeatures(features);
-});
+  $('#app').html((new Date()).toTimeString());
+}
+
+(function fetch() {
+  $.ajax({
+    url: 'https://data.emergency.vic.gov.au/Show?pageId=getIncidentJSON',
+    method: 'GET',
+    cache: false,
+    dataType: 'jsonp',
+    jsonpCallback: 'onIncidentJSONLoaded',
+    complete: setTimeout(function() {fetch()}, 15000),
+    timeout: 3000
+  });
+})();
