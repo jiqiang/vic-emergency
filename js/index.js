@@ -29,7 +29,7 @@ style = new ol.style.Style({
 });
 
 source = new ol.source.Vector({
-  url: '/data/vic.json',
+  url: 'data/vic.json',
   format: new ol.format.GeoJSON()
 });
 
