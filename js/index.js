@@ -43,14 +43,14 @@ emergencyLayer = new ol.layer.Vector({
 });
 
 view = new ol.View({
-  center: [0, 0],
-  zoom: 1
+
 });
 
 map = new ol.Map({
   target: 'vic-emergency-map',
   layers: [baseLayer, emergencyLayer],
-  view: view
+  view: view,
+  maxResolution: 1000
 });
 
 size = map.getSize();
