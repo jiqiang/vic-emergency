@@ -50,12 +50,7 @@ view = new ol.View({
 map = new ol.Map({
   target: 'vic-emergency-map',
   layers: [baseLayer, emergencyLayer],
-  view: view,
-  controls: ol.control.defaults({
-    attributionOptions: {
-      collapsible: false
-    }
-  })
+  view: view
 });
 
 size = map.getSize();
@@ -65,9 +60,6 @@ source.once('addfeature', function(e) {
   view.fit(polygon, size, {constrainResolution: false});
 });
 
-window.addEventListener('resize', function() {
-
-})
 
 function getEmergencyFeature(emergency) {
   return new ol.Feature({
