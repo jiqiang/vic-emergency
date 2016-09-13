@@ -84,6 +84,6 @@ function onIncidentJSONLoaded(response) {
     dataType: 'jsonp',
     jsonpCallback: 'onIncidentJSONLoaded',
     complete: setTimeout(function() {fetch()}, 15000),
-    timeout: 3000
+    timeout: 10000
   });
 })();
