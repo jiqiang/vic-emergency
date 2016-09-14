@@ -11,13 +11,16 @@ var map,
     emergencyLayerSource = undefined,
     vicLayer;
 
-style = new ol.style.Style({
+vicLayerStyle = new ol.style.Style({
   fill: new ol.style.Fill({
     color: 'rgba(255, 255, 255, 0)'
   }),
   stroke: new ol.style.Stroke({
     color: 'rgba(255, 255, 255, 0)'
-  }),
+  })
+});
+
+emergencyLayerStyle = new ol.style.Style({
   image: new ol.style.Circle({
     radius: 5,
     fill: new ol.style.Fill({
@@ -41,7 +44,7 @@ vicLayerSource = new ol.source.Vector({
 
 vicLayer = new ol.layer.Vector({
   source: vicLayerSource,
-  style: style
+  style: vicLayerStyle
 });
 
 view = new ol.View({
@@ -52,7 +55,12 @@ view = new ol.View({
 map = new ol.Map({
   target: 'vic-emergency-map',
   layers: [baseLayer, vicLayer],
-  view: view
+  view: view,
+  controls: ol.control.defaults({
+    attributionOptions: /** @type {olx.control.AttributionOptions} */ ({
+      collapsible: true
+    })
+  })
 });
 
 vicLayerSource.once('addfeature', function(e) {
@@ -81,7 +89,7 @@ function onIncidentJSONLoaded(response) {
   if (emergencyLayer == undefined) {
     emergencyLayer = new ol.layer.Vector({
       source: emergencyLayerSource,
-      style: style
+      style: emergencyLayerStyle
     });
 
     map.addLayer(emergencyLayer);
