@@ -9,7 +9,9 @@ var map,
     style,
     emergencyFeature,
     emergencyLayerSource = undefined,
-    vicLayer;
+    vicLayer,
+    selectedEmergency = undefined,
+    selectedEmergencyStyle;
 
 vicLayerStyle = new ol.style.Style({
   fill: new ol.style.Fill({
@@ -25,6 +27,19 @@ emergencyLayerStyle = new ol.style.Style({
     radius: 5,
     fill: new ol.style.Fill({
       color: 'rgba(255, 0, 0, 1)'
+    }),
+    stroke: new ol.style.Stroke({
+      color: '#319FD3',
+      width: 1
+    })
+  })
+});
+
+selectedEmergencyStyle = new ol.style.Style({
+  image: new ol.style.Circle({
+    radius: 5,
+    fill: new ol.style.Fill({
+      color: 'blue'
     }),
     stroke: new ol.style.Stroke({
       color: '#319FD3',
@@ -69,7 +84,13 @@ vicLayerSource.once('addfeature', function(e) {
 
 function getEmergencyFeature(emergency) {
   return new ol.Feature({
-    geometry: new ol.geom.Point(ol.proj.transform([emergency.longitude, emergency.latitude], 'EPSG:4326', 'EPSG:3857'))
+    geometry: new ol.geom.Point(ol.proj.transform([emergency.longitude, emergency.latitude], 'EPSG:4326', 'EPSG:3857')),
+    incidentNo: emergency.incidentNo,
+    incidentLocation: emergency.incidentLocation,
+    incidentType: emergency.incidentType,
+    incidentStatus: emergency.incidentStatus,
+    name: emergency.name,
+    lastUpdateDateTime: emergency.lastUpdateDateTime
   });
 }
 
@@ -93,6 +114,23 @@ function onIncidentJSONLoaded(response) {
     });
 
     map.addLayer(emergencyLayer);
+
+    selectedEmergency = new ol.interaction.Select({
+      layers: [emergencyLayer],
+      style: selectedEmergencyStyle
+    });
+
+    map.addInteraction(selectedEmergency);
+
+    selectedEmergency.on('select', function(e) {
+      if (e.selected.length > 0) {
+        $('#emergency-detail')
+          .empty()
+          .append(e.selected[0].get('incidentNo'))
+          .append('<br />')
+          .append(e.selected[0].get('name'));
+      }
+    });
   }
 
   $('#app').html((new Date()).toTimeString());
