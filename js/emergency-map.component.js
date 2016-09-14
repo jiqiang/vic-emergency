@@ -17,8 +17,6 @@ angular.module('vicEmergency').component('emergencyMap', {
       selectedEmergency = undefined,
       selectedEmergencyStyle;
 
-
-
     vicLayerStyle = new ol.style.Style({
       fill: new ol.style.Fill({
         color: 'rgba(255, 255, 255, 0)'
