@@ -1,13 +1,15 @@
 var map,
     baseLayer,
-    emergencyLayer,
+    emergencyLayer = undefined,
     source,
     view,
     feature,
     polygon,
     size,
     style,
-    emergencyFeature;
+    emergencyFeature,
+    emergencyLayerSource = undefined,
+    vicLayer;
 
 style = new ol.style.Style({
   fill: new ol.style.Fill({
@@ -28,38 +30,34 @@ style = new ol.style.Style({
   })
 });
 
-source = new ol.source.Vector({
-  url: 'data/vic.json',
-  format: new ol.format.GeoJSON()
-});
-
 baseLayer = new ol.layer.Tile({
   source: new ol.source.OSM()
 });
 
-emergencyLayer = new ol.layer.Vector({
-  source: source,
+vicLayerSource = new ol.source.Vector({
+  url: 'data/vic.json',
+  format: new ol.format.GeoJSON()
+});
+
+vicLayer = new ol.layer.Vector({
+  source: vicLayerSource,
   style: style
 });
 
 view = new ol.View({
-
+  center: [0, 0],
+  zoom: 1
 });
 
 map = new ol.Map({
   target: 'vic-emergency-map',
-  layers: [baseLayer, emergencyLayer],
-  view: view,
-  maxResolution: 1000
+  layers: [baseLayer, vicLayer],
+  view: view
 });
 
-size = map.getSize();
-
-source.once('addfeature', function(e) {
-  polygon = e.feature.getGeometry()
-  view.fit(polygon, size, {constrainResolution: false});
+vicLayerSource.once('addfeature', function(e) {
+  view.fit(e.feature.getGeometry(), map.getSize(), {constrainResolution: false});
 });
-
 
 function getEmergencyFeature(emergency) {
   return new ol.Feature({
@@ -71,8 +69,24 @@ function onIncidentJSONLoaded(response) {
   features = response.results.map(function(item) {
     return getEmergencyFeature(item);
   });
-  source.clear();
-  source.addFeatures(features);
+
+  if (emergencyLayerSource == undefined) {
+    emergencyLayerSource = new ol.source.Vector({ features: features });
+  }
+  else {
+    emergencyLayerSource.clear();
+    emergencyLayerSource.addFeatures(features);
+  }
+
+  if (emergencyLayer == undefined) {
+    emergencyLayer = new ol.layer.Vector({
+      source: emergencyLayerSource,
+      style: style
+    });
+
+    map.addLayer(emergencyLayer);
+  }
+
   $('#app').html((new Date()).toTimeString());
 }
 
@@ -83,7 +97,7 @@ function onIncidentJSONLoaded(response) {
     cache: false,
     dataType: 'jsonp',
     jsonpCallback: 'onIncidentJSONLoaded',
-    complete: setTimeout(function() {fetch()}, 15000),
+    complete: setTimeout(function() {fetch()}, 10000),
     timeout: 10000
   });
 })();
