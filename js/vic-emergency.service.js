@@ -41,9 +41,12 @@ angular.module('vicEmergency')
   function makeChartData(x, y) {
     var chartData = [];
     for (var i = 0; i < x.length; i++) {
-      chartData.push([x[i], y[i].length]);
+      chartData.push(y[i].length);
     }
-    return chartData;
+    return {
+      x: x,
+      y: chartData
+    };
   }
 
   return {

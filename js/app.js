@@ -4,7 +4,7 @@ angular.module('vicEmergency', [])
     var self = this;
     self.emergencies = [];
     self.dailyData = [];
-    self.chartData = [];
+    self.chartData = { x:[], y:[] };
 
     utils.fetch().then(function(response) {
       var items = response.data.results;

@@ -15,19 +15,22 @@ angular.module('vicEmergency').component('emergencyChart', {
         min: 0
       },
       tooltip: {
-        headerFormat: '',
-        pointFormat: '{point.y}@{point.x}'
+        formatter: function() {
+          return this.y + ' incidents @ ' + this.x;
+        }
       },
       plotOptions: {
         spline: {
           marker: { enabled: false }
         }
       },
-      series: [{ data: self.chartData }]
+      series: [{ data: [] }],
+      legend: { enabled: false }
     });
 
     self.$onChanges = function(changesObj) {
-      chart.series[0].setData(changesObj.data.currentValue, true);
+      chart.series[0].setData(changesObj.data.currentValue.y, true);
+      chart.xAxis[0].setCategories(changesObj.data.currentValue.x, true);
     };
   },
   bindings: {
