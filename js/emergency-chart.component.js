@@ -20,7 +20,7 @@ angular.module('vicEmergency').component('emergencyChart', {
       },
       plotOptions: {
         spline: {
-          marker: { enabled: true }
+          marker: { enabled: false }
         }
       },
       series: [{ data: self.chartData }]
