@@ -4,7 +4,9 @@ angular.module('vicEmergency').component('emergencyChart', {
     var self = this;
 
     var chart = Highcharts.chart('emergency-chart', {
-      chart: { type: 'spline' },
+      chart: {
+        type: 'spline'
+      },
       title: { text: 'Victoria Emergencies' },
       subtitle: { text: 'Incidents report at every 10 minutes' },
       xAxis: {
@@ -16,12 +18,17 @@ angular.module('vicEmergency').component('emergencyChart', {
       },
       tooltip: {
         formatter: function() {
-          return this.y + ' incidents @ ' + this.x;
+          return this.y + ' incident(s) @ ' + this.x;
         }
       },
       plotOptions: {
         spline: {
-          marker: { enabled: false }
+          marker: { enabled: false },
+          events: {
+            click: function(e) {
+              console.log(e.point.index);
+            }
+          }
         }
       },
       series: [{ data: [] }],
