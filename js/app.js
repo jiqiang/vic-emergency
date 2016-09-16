@@ -1,10 +1,22 @@
 angular.module('vicEmergency', [])
-  .controller('VicEmergencyController', ['$http', function VicEmergencyController($http) {
+  .controller('VicEmergencyController', ['$http', 'utils', function VicEmergencyController($http, utils) {
+
     var self = this;
     self.emergencies = [];
-    $http
-      .jsonp('https://data.emergency.vic.gov.au/Show?pageId=getIncidentJSON&callback=JSON_CALLBACK')
-      .then(function(response) {
-        self.emergencies = response.data.results;
-      });
+    self.dailyData = [];
+    self.chartData = [];
+
+    utils.fetch().then(function(response) {
+      var items = response.data.results;
+
+      var timeSeries = utils.dailyTimeSeries();
+
+      for (var i = 0; i < timeSeries.length; i++) {
+        var shuffledItems = utils.shuffle(items);
+        var newItems = shuffledItems.slice(0, utils.random(1, shuffledItems.length));
+        self.dailyData.push(newItems);
+      }
+
+      self.chartData = utils.makeChartData(timeSeries, self.dailyData);
+    });
   }]);
