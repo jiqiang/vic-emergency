@@ -1,10 +1,10 @@
 angular.module('vicEmergency', [])
-  .controller('VicEmergencyController', ['$http', 'utils', function VicEmergencyController($http, utils) {
+  .controller('VicEmergencyController', ['$http', '$timeout', 'utils', function VicEmergencyController($http, $timeout, utils) {
 
     var self = this;
-    self.emergencies = [];
-    self.dailyData = [];
-    self.chartData = { x:[], y:[] };
+    this.emergencies = [];
+    this.dailyData = [];
+    this.chartData = { x:[], y:[] };
 
     utils.fetch().then(function(response) {
       var items = response.data.results;
@@ -19,4 +19,10 @@ angular.module('vicEmergency', [])
 
       self.chartData = utils.makeChartData(timeSeries, self.dailyData);
     });
+
+    this.emitIncident = function(index) {
+      $timeout(function() {
+        self.emergencies = self.dailyData[index];
+      }, 0, true);
+    };
   }]);

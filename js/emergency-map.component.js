@@ -98,7 +98,7 @@ angular.module('vicEmergency').component('emergencyMap', {
       });
     }
 
-    self.$onChanges = function(changesObj) {
+    this.$onChanges = function(changesObj) {
       if (changesObj.emergencies.currentValue.length > 0 && changesObj.emergencies.currentValue !== changesObj.emergencies.previousValue) {
         features = changesObj.emergencies.currentValue.map(function(item) {
           return getEmergencyFeature(item);

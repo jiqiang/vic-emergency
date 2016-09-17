@@ -26,7 +26,7 @@ angular.module('vicEmergency').component('emergencyChart', {
           marker: { enabled: false },
           events: {
             click: function(e) {
-              console.log(e.point.index);
+              self.onClickIncident({index: e.point.index});
             }
           }
         }
@@ -35,13 +35,14 @@ angular.module('vicEmergency').component('emergencyChart', {
       legend: { enabled: false }
     });
 
-    self.$onChanges = function(changesObj) {
+    this.$onChanges = function(changesObj) {
       chart.series[0].setData(changesObj.data.currentValue.y, true);
       chart.xAxis[0].setCategories(changesObj.data.currentValue.x, true);
     };
   },
   bindings: {
-    data: '<'
+    data: '<',
+    onClickIncident: '&'
   }
 
 });
